@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stylist Management & Schedule</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/th.js"></script>
+
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap");
+        body { font-family: 'Kanit', sans-serif; background-color: #fcfaf9; }
+        .modern-card { background: white; border-radius: 1.25rem; box-shadow: 0 4px 20px rgba(0,0,0,0.03); }
+        .modern-input { border: 1px solid #eee; border-radius: 0.75rem; transition: all 0.3s; }
+        .modern-input:focus { border-color: #f4c2c2; outline: none; box-shadow: 0 0 0 3px rgba(244, 194, 194, 0.2); }
+        .btn-primary { background: #3a3532; color: white; border-radius: 0.75rem; transition: all 0.3s; }
+        .btn-primary:hover { background: #524b47; transform: translateY(-1px); }
+        .input-group { position: relative; }
+        .input-group i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: #9e9792; }
+        .input-group input { padding-left: 2.75rem; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-6xl mx-auto space-y-8">
+        
+        <header class="flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-[#3a3532]">จัดการตารางงานช่าง</h1>
+                <p class="text-sm text-[#9e9792]">เพิ่มช่างและระบุช่วงวันที่เข้าปฏิบัติงาน</p>
+            </div>
+            <div class="text-right">
+                <span class="bg-[#f4c2c2]/20 text-[#3a3532] px-4 py-2 rounded-full text-xs font-semibold">Admin Mode</span>
+            </div>
+        </header>
+
+        <div id="admin-view-staff" class="admin-view space-y-6">
+            <div class="modern-card p-6 md:p-8 border-t-4 border-t-[#f4c2c2]">
+                <h3 class="text-xl font-semibold text-[#3a3532] mb-6 flex items-center justify-between">
+                    <span class="flex items-center gap-2"><i class="ph ph-user-plus text-[#f4c2c2]"></i> เพิ่มช่างและกำหนดวันทำงาน</span>
+                </h3>
+                
+                <form id="addStaffForm" class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
+                    <div class="md:col-span-3">
+                        <label class="block text-xs font-medium text-[#9e9792] mb-2 uppercase ml-1">ชื่อช่าง (TH)</label>
+                        <div class="input-group">
+                            <i class="ph ph-user"></i>
+                            <input type="text" id="new-staff-name-th" required class="w-full py-3.5 modern-input text-sm" placeholder="เช่น ช่างแอน">
+                        </div>
+                    </div>
+                    
+                    <div class="md:col-span-3">
+                        <label class="block text-xs font-medium text-[#9e9792] mb-2 uppercase ml-1">Stylist Name (EN)</label>
+                        <div class="input-group">
+                            <i class="ph ph-user"></i>
+                            <input type="text" id="new-staff-name-en" required class="w-full py-3.5 modern-input text-sm" placeholder="e.g. Ann">
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-4">
+                        <label class="block text-xs font-medium text-[#9e9792] mb-2 uppercase ml-1">เลือกช่วงวันที่ทำงาน (Range)</label>
+                        <div class="input-group">
+                            <i class="ph ph-calendar-blank"></i>
+                            <input type="text" id="work-range" required class="w-full py-3.5 modern-input text-sm" placeholder="คลิกเพื่อเลือกวันที่เริ่ม - สิ้นสุด">
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <button type="submit" id="submit-staff-btn" class="w-full btn-primary py-3.5 px-8 text-sm font-medium">
+                            <span class="flex items-center justify-center gap-2"><i class="ph ph-floppy-disk"></i> บันทึก</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div>
+                <h3 class="text-xl font-semibold text-[#3a3532] mb-4 flex items-center gap-2">
+                    <i class="ph ph-users-three"></i> รายชื่อช่างและตารางงาน
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="staff-list-admin">
+                    <div class="modern-card p-5 border border-gray-100 relative overflow-hidden group">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="h-12 w-12 bg-[#f4c2c2]/30 rounded-full flex items-center justify-center text-[#3a3532] text-xl font-bold">
+                                A
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="p-2 hover:bg-blue-50 text-blue-400 rounded-lg transition"><i class="ph ph-pencil-line"></i></button>
+                                <button class="p-2 hover:bg-red-50 text-red-400 rounded-lg transition"><i class="ph ph-trash"></i></button>
+                            </div>
+                        </div>
+                        <h4 class="font-bold text-[#3a3532]">ช่างแอน (Ann)</h4>
+                        <div class="mt-3 flex items-center gap-2 text-xs text-[#9e9792] bg-gray-50 p-2 rounded-md">
+                            <i class="ph ph-calendar-check text-[#f4c2c2] text-base"></i>
+                            <span>เข้างาน: 25 มี.ค. 2026 - 30 มี.ค. 2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ตั้งค่า Calendar (Flatpickr)
+        flatpickr("#work-range", {
+            mode: "range",
+            minDate: "today",
+            dateFormat: "d M Y",
+            locale: "th",
+            onChange: function(selectedDates, dateStr, instance) {
+                // เก็บค่าวันที่ไปใช้งานต่อได้ที่นี่
+            }
+        });
+
+        // จำลองการเพิ่มข้อมูล
+        const staffForm = document.getElementById('addStaffForm');
+        const staffList = document.getElementById('staff-list-admin');
+
+        staffForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const nameTh = document.getElementById('new-staff-name-th').value;
+            const nameEn = document.getElementById('new-staff-name-en').value;
+            const dateRange = document.getElementById('work-range').value;
+
+            const card = document.createElement('div');
+            card.className = 'modern-card p-5 border border-gray-100 relative overflow-hidden fade-in';
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div class="h-12 w-12 bg-[#f4c2c2]/30 rounded-full flex items-center justify-center text-[#3a3532] text-xl font-bold">
+                        ${nameEn.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="flex gap-2">
+                        <button class="p-2 hover:bg-red-50 text-red-400 rounded-lg transition"><i class="ph ph-trash"></i></button>
+                    </div>
+                </div>
+                <h4 class="font-bold text-[#3a3532]">${nameTh} (${nameEn})</h4>
+                <div class="mt-3 flex items-center gap-2 text-xs text-[#9e9792] bg-gray-50 p-2 rounded-md">
+                    <i class="ph ph-calendar-check text-[#f4c2c2] text-base"></i>
+                    <span>เข้างาน: ${dateRange}</span>
+                </div>
+            `;
+
+            staffList.prepend(card);
+            staffForm.reset();
+        });
+    </script>
+</body>
+</html>

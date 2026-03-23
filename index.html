@@ -1,367 +1,357 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>baber</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="icon" href="/image/favicon.ico?v=2" type="image/x-icon" />
-    <!-- <link rel= "stylesheet" href= "https://maxst.icons8.com/vue-static/landings/line-awesome/line-awesome/1.3.0/css/line-awesome.min.css" > -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-
-    
+    <title>Cozy Barber | Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Noto+Sans+Thai:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', 'Noto Sans Thai', sans-serif; background-color: #fdfaf7; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.3); }
+        .btn-primary { background: #8e735b; color: white; transition: all 0.3s; }
+        .btn-primary:hover { background: #765f4a; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(142, 115, 91, 0.3); }
+        .card-soft { background: white; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); border: 1px solid #f1f1f1; }
+        input, select { border-radius: 12px !important; border: 1px solid #eee !important; padding: 12px !important; width: 100%; }
+        input:focus, select:focus { border-color: #8e735b !important; outline: none; box-shadow: 0 0 0 3px rgba(142, 115, 91, 0.1); }
+        .animate-fadeIn { animation: fadeIn 0.4s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
+<body class="text-gray-700">
 
-<body>
-    <div class="container">
-        <div class="text-center"><img src="img/logo-removebg-preview.png" alt=""></div>
-<br>
-        <div class="nav-buttons">
-            <button class="nav-btn active" onclick="showPage('dashboard')">📊 Dashboard</button>
-            <button class="nav-btn" onclick="showPage('characters')">💃 บริการ</button>
-            <button class="nav-btn" onclick="showPage('menu')">🍜 เมนูอาหาร</button>
-            <button class="nav-btn" onclick="showPage('promotions')">🎉 โปรโมชั่น</button>
-        </div>
-
-        <!-- Dashboard Page -->
-        <div id="dashboard" class="page active">
-            <div class="card">
-                <h2>📈 Dashboard รายรับของร้าน</h2>
-                <!-- <canvas id="myChart" style="width:100%;max-width:500px"></canvas>
-                <canvas id="myChart2" style="width:100%;max-width:500px"></canvas> -->
-
-                <div class="chart-placeholder">
-                    📊 Chart - กราฟแสดงรายรับรายวัน
-                    <canvas id="myChart2" style="width:100%;max-width:500px"></canvas>
-                </div>
-                <div class="dashboard-grid">
-                    <div class="stat-card">
-                        <div class="stat-number">฿45,680</div>
-                        <div class="stat-label">รายรับวันนี้</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">50</div>
-                        <div class="stat-label">จำนวนรอบวันนี้</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">546</div>
-                        <div class="stat-label">จำนวนรอบสัปดาห์นี้</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">245</div>
-                        <div class="stat-label">ออเดอร์อาหารวันนี้</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">1,847</div>
-                        <div class="stat-label">ออเดอร์อาหารสัปดาห์นี้</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-number">฿312,450</div>
-                        <div class="stat-label">รายรับสัปดาห์นี้</div>
-                    </div>  
-                    
-                </div>
-                
+    <nav class="sticky top-0 z-50 px-6 py-4 glass mb-6 border-b border-orange-50">
+        <div class="max-w-5xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2 cursor-pointer" onclick="location.reload()">
+                <span class="text-2xl">✂️</span>
+                <h1 class="text-xl font-bold tracking-tight text-[#5d4d3f]">CHIC & COZY</h1>
+            </div>
+            <div class="flex gap-2 p-1 bg-gray-100/50 rounded-2xl">
+                <button onclick="switchView('customer-view')" id="nav-cust" class="px-5 py-2 rounded-xl text-sm font-semibold transition bg-white shadow-sm text-[#8e735b]">จองคิว</button>
+                <button onclick="showAdminSection()" id="nav-admin" class="px-5 py-2 rounded-xl text-sm font-semibold transition text-gray-500 hover:text-[#8e735b]">ส่วนของผู้จัดการ</button>
             </div>
         </div>
+    </nav>
 
-        <!-- Characters Page -->
-        <div id="characters" class="page">
-            <div class="card">
-                <h2>💃 คนที่พร้อมบริการ</h2>
-                <div class="character-grid">
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/1.jpg" alt="" width="100%"></div>
-                        <h3>น้องพลอย</h3>
-                        <p>No.42</p>
-                        <span class="character-status available">พร้อมทำงาน</span>
-                    </div>
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/2.jpg" alt="" width="100%"></div>
-                        <h3>น้องชมพู</h3>
-                        <p>No.17</p>
-                        <span class="character-status available">พร้อมทำงาน</span>
-                    </div>
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/3.png" alt="" width="100%"></div>
-                        <h3>น้องซากุระ</h3>
-                        <p>No.23</p>
-                        <span class="character-status busy">กำลังทำงาน</span>
-                    </div>
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/4.jpg" alt="" width="100%"></div>
-                        <h3>น้องโทนี่</h3>
-                        <p>No.12</p>
-                        <span class="character-status available">พร้อมทำงาน</span>
-                    </div>
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/5.webp" alt="" width="100%"></div>
-                        <h3>น้องลิซ่า</h3>
-                        <p>No.24</p>
-                        <span class="character-status busy">กำลังทำงาน</span>
-                    </div>
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/6.jpg" alt="" width="100%"></div>
-                        <h3>น้องขิง</h3>
-                        <p>No.27</p>
-                        <span class="character-status available">พร้อมทำงาน</span>
-                    </div>
-                </div>
-            </div>
-            <div class="card">
-                <h2>💃 คนที่ยังไม่มา</h2>
-                <div class="character-grid">
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/1.jpg" alt="" width="100%"></div>
-                        <h3>น้องพลอยชมพู</h3>
-                        <p>No.41</p>
-                        <span class="character-status busy">ยังไม่มา</span>
-                    </div>
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/2.jpg" alt="" width="100%"></div>
-                        <h3>น้องชมพูนุช</h3>
-                        <p>No.33</p>
-                        <span class="character-status busy">ยังไม่มา</span>
-                    </div>
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/3.png" alt="" width="100%"></div>
-                        <h3>น้องซาชิ</h3>
-                        <p>No.25</p>
-                        <span class="character-status busy">ยังไม่มา</span>
-                    </div>
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/4.jpg" alt="" width="100%"></div>
-                        <h3>น้องข้าวฟ่าง</h3>
-                        <p>No.15</p>
-                        <span class="character-status busy">ยังไม่มา</span>
-                    </div>
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/5.webp" alt="" width="100%"></div>
-                        <h3>น้องลิตา</h3>
-                        <p>No.29</p>
-                        <span class="character-status busy">ยังไม่มา</span>
-                    </div>
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/6.jpg" alt="" width="100%"></div>
-                        <h3>น้องน้ำ</h3>
-                        <p>No.28</p>
-                        <span class="character-status busy">ยังไม่มา</span>
-                    </div>
-                    <div class="character-card">
-                        <div class="character-avatar"><img src="img/imgChild/7.jpg" alt="" width="100%"></div>
-                        <h3>น้องแอปเปิ้ล</h3>
-                        <p>No.29</p>
-                        <span class="character-status busy">ยังไม่มา</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <main class="max-w-4xl mx-auto px-4 pb-20">
 
-        <!-- Menu Page -->
-        <div id="menu" class="page">
-            <div class="card">
-                <h2>🍜 เมนูอาหาร</h2>
-                 <div style="text-align: right; margin-bottom: 10px;">
-            <button class="btn btn-primary" id="viewOrderBtn">
-                📋 รายการสั่งอาหาร <span class="order-count badge bg-light text-dark">3</span>
-            </button>
-        </div>
-                <div class="menu-grid">
-                    <div class="menu-item">
-                        <div class="menu-image"><img src="img/imgFood/padthai.jpg" alt="" width="120%"></div>
-                        <div class="menu-content">
-                            <h3 class="menu-title">ผัดไทยกุ้งสด</h3>
-                            <p class="menu-description">ผัดไทยใส่กุ้งสดขนาดใหญ่ เส้นเหนียวนุ่ม รสชาติเข้มข้น</p>
-                            <span class="menu-price">฿180</span>
+        <div id="customer-view" class="space-y-8 animate-fadeIn">
+            <div class="text-center space-y-2">
+                <h2 class="text-3xl font-bold text-[#5d4d3f]">จองคิวตัดผม</h2>
+                <p class="text-gray-400">สัมผัสประสบการณ์การตัดผมที่เหนือระดับ ในราคาเริ่มต้นเพียง <span class="font-bold text-[#8e735b] display-price">฿350</span></p>
+            </div>
+
+            <div class="card-soft p-8">
+                <form id="bookingForm" onsubmit="handleBooking(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold">ชื่อ-นามสกุล</label>
+                            <input type="text" id="customerName" placeholder="ระบุชื่อของคุณ" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold">เบอร์โทรศัพท์</label>
+                            <input type="tel" id="customerTel" placeholder="08x-xxx-xxxx" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold">วันที่จอง</label>
+                            <input type="date" id="bookingDate" required>
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-sm font-semibold">เวลา</label>
+                            <select id="bookingTime" required>
+                                <option value="10:00">10:00 - 11:00</option>
+                                <option value="11:00">11:00 - 12:00</option>
+                                <option value="13:00">13:00 - 14:00</option>
+                                <option value="14:00">14:00 - 15:00</option>
+                                <option value="15:00">15:00 - 16:00</option>
+                                <option value="16:00">16:00 - 17:00</option>
+                            </select>
+                        </div>
+                        <div class="space-y-2 md:col-span-2">
+                            <label class="text-sm font-semibold">เลือกช่างฝีมือ</label>
+                            <select id="barberSelect"></select>
                         </div>
                     </div>
-                    <div class="menu-item">
-                        <div class="menu-image"><img src="img/imgFood/tomyum.jpg" alt="" width="120%"></div>
-                        <div class="menu-content">
-                            <h3 class="menu-title">ต้มยำกุ้งน้ำข้น</h3>
-                            <p class="menu-description">ต้มยำรสเข้มข้น กุ้งสดใหญ่ เห็ดฟาง ใบมะกรูด</p>
-                            <span class="menu-price">฿220</span>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <div class="menu-image"><img src="img/imgFood/steak.jpg" alt="" width="120%"></div>
-                        <div class="menu-content">
-                            <h3 class="menu-title">สเต็กเนื้อย่าง</h3>
-                            <p class="menu-description">เนื้อวัวนำเข้าคุณภาพเยี่ยม ย่างสุกกำลังดี</p>
-                            <span class="menu-price">฿450</span>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <div class="menu-image"><img src="img/imgFood/shushi.webp" alt="" width="120%"></div>
-                        <div class="menu-content">
-                            <h3 class="menu-title">ซูชิรวมมิตร</h3>
-                            <p class="menu-description">ซูชิคละแสน ปลาสดทุกชิ้น วัตถุดิบนำเข้าจากญี่ปุ่น</p>
-                            <span class="menu-price">฿380</span>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <div class="menu-image"><img src="img/imgFood/pizza.jpg" alt="" width="130%"></div>
-                        <div class="menu-content">
-                            <h3 class="menu-title">พิซซ่าชีสเยอะ</h3>
-                            <p class="menu-description">พิซซ่าแป้งบาง ชีสมอสซาเรลล่า 4 ชนิด</p>
-                            <span class="menu-price">฿320</span>
-                        </div>
-                    </div>
-                    <div class="menu-item">
-                        <div class="menu-image"><img src="img/imgFood/cake.jpg" alt="" width="120%"></div>
-                        <div class="menu-content">
-                            <h3 class="menu-title">เค้กช็อกโกแลต</h3>
-                            <p class="menu-description">เค้กช็อกโกแลตเข้ม หน้านุ่ม ใส่วิปครีม</p>
-                            <span class="menu-price">฿150</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal สำหรับโชว์รายการสั่งอาหาร -->
-        <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="orderModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="orderModalLabel">📋 รายการอาหารที่สั่ง</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="ปิด"></button>
-            </div>
-            <div class="modal-body">
-                <ul id="orderList">
-                <li>ผัดไทยกุ้งสด x 2</li>
-                <li>ต้มยำกุ้งน้ำข้น x 1</li>
-                <li>พิซซ่าชีสเยอะ x 3</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ปิด</button>
-            </div>
-            </div>
-        </div>
-        </div>
-
-        <!-- Promotions Page -->
-        <div id="promotions" class="page">
-            <div class="card">
-                <h2>🎉 โปรโมชั่นพิเศษ</h2>
-                <div style="text-align: right; margin-bottom: 10px;">
-            <button class="btn btn-success" id="viewReceiptBtn">
-                🧾 ดูใบเสร็จ
-            </button>
-        </div>
-                <div class="promotion-card">
-                    <div class="promotion-discount">-50%</div>
-                    <h3 class="promotion-title">🍜 Happy Hour</h3>
-                    <p class="promotion-description">
-                        ลด 50% สำหรับเมนูอาหารทุกเมนู ทุกวันจันทร์-ศุกร์ เวลา 14:00-17:00 น. 
-                        รับประทานที่ร้านเท่านั้น ไม่สามารถใช้ร่วมกับโปรโมชั่นอื่นได้
-                    </p>
-                </div>
-
-                <div class="promotion-card">
-                    <div class="promotion-discount">ซื้อ 2 ฟรี 1</div>
-                    <h3 class="promotion-title">🍰 Sweet Deal</h3>
-                    <p class="promotion-description">
-                        มาก่อน 21:00 เหล้ารีเจนซี่ 2 ขวด 999.-  แถมฟรี 1 ขวด
-                        โปรโมชั่นนี้ใช้ได้ทุกวัน
-                    </p>
-                </div>
-
-                <div class="promotion-card">
-                    <div class="promotion-discount">-30%</div>
-                    <h3 class="promotion-title">🥘 Family Set</h3>
-                    <p class="promotion-description">
-                        สั่งอาหารครบ 4 เมนู รับส่วนลดทันที 30% สำหรับโต๊ะที่มีลูกค้า 4 คนขึ้นไป 
-                        ใช้ได้ทุกวัน ตั้งแต่ 18:00 น. เป็นต้นไป
-                    </p>
-                </div>
-
-                <div class="promotion-card">
-                    <div class="promotion-discount">ฟรี!</div>
-                    <h3 class="promotion-title">🥤 Free Drink</h3>
-                    <p class="promotion-description">
-                        สั่งอาหารครบ 500 บาท แถมเครื่องดื่มฟรี 1 แก้ว
-                    </p>
-                </div>
+                    <button type="submit" class="w-full btn-primary py-4 rounded-2xl font-bold text-lg mt-4">
+                        ยืนยันการจอง (฿<span class="display-price">350</span>)
+                    </button>
+                </form>
+                <div id="bookingAlert" class="mt-4 hidden p-4 rounded-xl text-center font-semibold"></div>
             </div>
         </div>
 
-        <!-- Modal ใบเสร็จ -->
-        <div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="width: 300px; margin: auto; font-family: monospace;">
-      <div class="modal-body">
-        <div style="text-align: center;">
-          <img src="img/logo-removebg-preview.png" alt="Logo" style="width: 100px; height: auto;">
-        <h5 style="text-align: center;">THALIA</h5>
-        <p style="text-align: center;">ใบเสร็จรับเงิน</p>
-        <p>เลขที่: IV-000186</p>
-        <p>วันที่: 2025-06-19 เวลา: 13:45</p>
-        <p>พนักงาน: Admin</p>
-        <hr>
-        <table style="width: 100%; font-size: 14px;">
-          <thead>
-            <tr>
-              <th style="text-align: left;">รายการ</th>
-              <th style="text-align: right;">จำนวน</th>
-              <th style="text-align: right;">ราคา</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>ผัดไทยกุ้งสด</td>
-              <td style="text-align: right;">2</td>
-              <td style="text-align: right;">360</td>
-            </tr>
-            <tr>
-              <td>พิซซ่าชีสเยอะ</td>
-              <td style="text-align: right;">1</td>
-              <td style="text-align: right;">320</td>
-            </tr>
-            <tr>
-              <td>บริการน้องพลอย</td>
-              <td style="text-align: right;">2ชม.</td>
-              <td style="text-align: right;">600</td>
-            </tr>
-            <tr>
-              <td>บริการน้องซากุระ</td>
-              <td style="text-align: right;">1ชม.</td>
-              <td style="text-align: right;">300</td>
-            </tr>
-          </tbody>
-        </table>
-        <hr>
-        <table style="width: 100%; font-size: 14px;">
-          <tr>
-            <td>รวม</td>
-            <td style="text-align: right;">1580.00</td>
-          </tr>
-          <tr>
-            <td>ส่วนลด</td>
-            <td style="text-align: right;">-500.00</td>
-          </tr>
-          <tr style="font-weight: bold;">
-            <td>ยอดสุทธิ</td>
-            <td style="text-align: right;">1080.00</td>
-          </tr>
-        </table>
-        <hr>
-        <p style="text-align: center;">ขอบคุณที่ใช้บริการ</p>
-      </div>
-    </div>
-  </div>
-</div>
-    </div>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script> 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <div id="login-view" class="hidden animate-fadeIn">
+            <div class="max-w-sm mx-auto card-soft p-8 text-center space-y-6 mt-12">
+                <div>
+                    <h2 class="text-2xl font-bold text-[#5d4d3f]">Manager Login</h2>
+                    <p class="text-sm text-gray-400">กรุณาเข้าสู่ระบบเพื่อจัดการร้าน</p>
+                </div>
+                <div class="space-y-4">
+                    <input type="text" id="username" placeholder="Username (admin)">
+                    <input type="password" id="password" placeholder="Password (1234)">
+                    <button onclick="handleLogin()" class="w-full btn-primary py-3 rounded-xl font-bold">เข้าสู่ระบบ</button>
+                </div>
+                <p id="loginError" class="text-red-500 text-xs hidden">❌ รหัสผ่านไม่ถูกต้อง</p>
+            </div>
+        </div>
 
-<script src="script.js"></script>
+        <div id="admin-view" class="hidden space-y-8 animate-fadeIn">
+            <div class="flex justify-between items-center">
+                <h2 class="text-3xl font-bold text-[#5d4d3f]">Dashboard</h2>
+                <button onclick="logout()" class="text-sm text-red-500 font-semibold bg-red-50 px-4 py-2 rounded-lg hover:bg-red-100">ออกจากระบบ</button>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card-soft p-6 bg-white">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">รายได้วันนี้</p>
+                    <p class="text-3xl font-bold text-green-600">฿<span id="revDay">0</span></p>
+                </div>
+                <div class="card-soft p-6 bg-white">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">รายได้เดือนนี้</p>
+                    <p class="text-3xl font-bold text-[#8e735b]">฿<span id="revMonth">0</span></p>
+                </div>
+                <div class="card-soft p-6 bg-white border-2 border-[#8e735b]/10">
+                    <p class="text-xs text-gray-400 uppercase tracking-wider font-bold mb-1">รายได้รวมทั้งปี</p>
+                    <p class="text-3xl font-bold text-[#5d4d3f]">฿<span id="revYear">0</span></p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card-soft p-6">
+                    <h3 class="font-bold text-lg mb-4">✂️ จัดการรายชื่อช่าง</h3>
+                    <div class="flex gap-2 mb-4">
+                        <input type="text" id="newBarberName" placeholder="ชื่อช่าง" class="text-sm">
+                        <button onclick="addBarber()" class="px-4 btn-primary rounded-xl text-sm font-bold shrink-0">เพิ่ม</button>
+                    </div>
+                    <div id="barberList" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <div class="card-soft p-6">
+                    <h3 class="font-bold text-lg mb-4">💰 ปรับเปลี่ยนราคา (บาท)</h3>
+                    <div class="flex gap-2">
+                        <input type="number" id="inputPrice" placeholder="ระบุราคาใหม่" class="text-sm">
+                        <button onclick="updateGlobalPrice()" class="px-4 bg-green-600 text-white rounded-xl text-sm font-bold shrink-0 hover:bg-green-700 transition">อัปเดต</button>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-3">* ราคานี้จะมีผลกับการจองใหม่ทุกครั้ง</p>
+                </div>
+            </div>
+
+            <div class="card-soft overflow-hidden">
+                <div class="p-6 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
+                    <h3 class="font-bold text-lg">รายการจองทั้งหมด</h3>
+                    <div class="text-xs font-semibold text-gray-400 uppercase">คิวทั้งหมด: <span id="totalBookingsCount">0</span></div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-gray-50 text-gray-400 uppercase text-[10px] tracking-widest">
+                            <tr>
+                                <th class="px-6 py-4">วันที่/เวลา</th>
+                                <th class="px-6 py-4">ลูกค้า</th>
+                                <th class="px-6 py-4">ช่าง</th>
+                                <th class="px-6 py-4 text-right">ยอดเงิน</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTableBody" class="divide-y divide-gray-50"></tbody>
+                    </table>
+                </div>
+                <div id="noData" class="p-12 text-center text-gray-300 italic">ยังไม่มีข้อมูลการจอง</div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- ฐานข้อมูลจำลอง (State) ---
+        let barbers = [
+            { id: 1, name: "ช่างเอก" },
+            { id: 2, name: "ช่างบอย" }
+        ];
+        let bookings = []; // เก็บ { name, tel, date, time, barberId, price, timestamp }
+        let SERVICE_PRICE = 350;
+        let isLoggedIn = false;
+
+        // --- เริ่มต้นระบบ ---
+        window.onload = () => {
+            renderBarberOptions();
+            updateUIPrices();
+            // ตั้งค่าวันที่เริ่มต้นใน Input
+            document.getElementById('bookingDate').valueAsDate = new Date();
+        };
+
+        // --- ฟังก์ชันหลัก ---
+
+        function switchView(view) {
+            document.getElementById('customer-view').classList.add('hidden');
+            document.getElementById('login-view').classList.add('hidden');
+            document.getElementById('admin-view').classList.add('hidden');
+
+            document.getElementById(view).classList.remove('hidden');
+            
+            // ปรับ Style ปุ่ม Navbar
+            const btnCust = document.getElementById('nav-cust');
+            const btnAdmin = document.getElementById('nav-admin');
+            
+            if(view === 'customer-view') {
+                btnCust.className = "px-5 py-2 rounded-xl text-sm font-semibold transition bg-white shadow-sm text-[#8e735b]";
+                btnAdmin.className = "px-5 py-2 rounded-xl text-sm font-semibold transition text-gray-500 hover:text-[#8e735b]";
+            }
+        }
+
+        function showAdminSection() {
+            if (isLoggedIn) {
+                switchView('admin-view');
+                updateDashboard();
+            } else {
+                switchView('login-view');
+            }
+            // ปรับ Style ปุ่ม Nav
+            document.getElementById('nav-admin').className = "px-5 py-2 rounded-xl text-sm font-semibold transition bg-white shadow-sm text-[#8e735b]";
+            document.getElementById('nav-cust').className = "px-5 py-2 rounded-xl text-sm font-semibold transition text-gray-500 hover:text-[#8e735b]";
+        }
+
+        // --- ระบบ Login ---
+        function handleLogin() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const errorMsg = document.getElementById('loginError');
+
+            if (user === 'admin' && pass === '1234') {
+                isLoggedIn = true;
+                errorMsg.classList.add('hidden');
+                showAdminSection();
+            } else {
+                errorMsg.classList.remove('hidden');
+            }
+        }
+
+        function logout() {
+            isLoggedIn = false;
+            switchView('customer-view');
+        }
+
+        // --- ระบบจัดการราคา ---
+        function updateGlobalPrice() {
+            const newPrice = document.getElementById('inputPrice').value;
+            if (newPrice && newPrice > 0) {
+                SERVICE_PRICE = parseInt(newPrice);
+                updateUIPrices();
+                alert('อัปเดตราคาเป็น ฿' + SERVICE_PRICE + ' เรียบร้อยแล้ว');
+            }
+        }
+
+        function updateUIPrices() {
+            document.querySelectorAll('.display-price').forEach(el => el.innerText = SERVICE_PRICE);
+            document.getElementById('inputPrice').value = SERVICE_PRICE;
+        }
+
+        // --- ระบบจัดการช่าง ---
+        function renderBarberOptions() {
+            const select = document.getElementById('barberSelect');
+            const listDiv = document.getElementById('barberList');
+            
+            select.innerHTML = `<option value="">-- ใครก็ได้ (Auto Assign) --</option>` + 
+                barbers.map(b => `<option value="${b.id}">${b.name}</option>`).join('');
+
+            listDiv.innerHTML = barbers.map(b => `
+                <div class="flex items-center gap-2 bg-[#8e735b]/10 text-[#8e735b] px-3 py-1.5 rounded-full text-xs font-bold">
+                    ${b.name}
+                    <button onclick="removeBarber(${b.id})" class="hover:text-red-500">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function addBarber() {
+            const nameInput = document.getElementById('newBarberName');
+            if (nameInput.value) {
+                barbers.push({ id: Date.now(), name: nameInput.value });
+                nameInput.value = "";
+                renderBarberOptions();
+                updateDashboard();
+            }
+        }
+
+        function removeBarber(id) {
+            barbers = barbers.filter(b => b.id !== id);
+            renderBarberOptions();
+            updateDashboard();
+        }
+
+        // --- ระบบการจอง ---
+        function handleBooking(e) {
+            e.preventDefault();
+            const name = document.getElementById('customerName').value;
+            const tel = document.getElementById('customerTel').value;
+            const dateStr = document.getElementById('bookingDate').value; // YYYY-MM-DD
+            const time = document.getElementById('bookingTime').value;
+            const bId = document.getElementById('barberSelect').value;
+
+            // ตรวจสอบคิวซ้ำ
+            const isFull = bId 
+                ? bookings.some(bk => bk.date === dateStr && bk.time === time && bk.barberId == bId)
+                : bookings.filter(bk => bk.date === dateStr && bk.time === time).length >= barbers.length;
+
+            const alertBox = document.getElementById('bookingAlert');
+            alertBox.classList.remove('hidden', 'bg-red-50', 'text-red-600', 'bg-green-50', 'text-green-600');
+
+            if (isFull) {
+                alertBox.classList.add('bg-red-50', 'text-red-600');
+                alertBox.innerText = "❌ ขออภัย! คิวช่วงเวลานี้เต็มแล้ว";
+            } else {
+                bookings.push({ 
+                    name, tel, date: dateStr, time, barberId: bId, 
+                    price: SERVICE_PRICE, 
+                    timestamp: new Date(dateStr) // ใช้เก็บสำหรับคำนวณเดือน/ปี
+                });
+                alertBox.classList.add('bg-green-50', 'text-green-600');
+                alertBox.innerText = "✅ จองคิวสำเร็จ! ขอบคุณที่ใช้บริการครับ";
+                document.getElementById('bookingForm').reset();
+                updateUIPrices();
+            }
+        }
+
+        // --- ระบบ Dashboard & รายได้ ---
+        function updateDashboard() {
+            const today = new Date().toISOString().split('T')[0];
+            const currentMonth = new Date().getMonth();
+            const currentYear = new Date().getFullYear();
+
+            let revDay = 0, revMonth = 0, revYear = 0;
+
+            bookings.forEach(b => {
+                const bDate = new Date(b.date);
+                if (b.date === today) revDay += b.price;
+                if (bDate.getMonth() === currentMonth && bDate.getFullYear() === currentYear) revMonth += b.price;
+                if (bDate.getFullYear() === currentYear) revYear += b.price;
+            });
+
+            document.getElementById('revDay').innerText = revDay.toLocaleString();
+            document.getElementById('revMonth').innerText = revMonth.toLocaleString();
+            document.getElementById('revYear').innerText = revYear.toLocaleString();
+            document.getElementById('totalBookingsCount').innerText = bookings.length;
+
+            // Render Table
+            const tbody = document.getElementById('adminTableBody');
+            if (bookings.length === 0) {
+                document.getElementById('noData').classList.remove('hidden');
+                tbody.innerHTML = "";
+            } else {
+                document.getElementById('noData').classList.add('hidden');
+                tbody.innerHTML = bookings.sort((a,b) => b.date.localeCompare(a.date)).map(b => {
+                    const barber = barbers.find(x => x.id == b.barberId);
+                    return `
+                        <tr class="hover:bg-gray-50/50 transition">
+                            <td class="px-6 py-4 font-semibold text-[#8e735b]">${b.date} <span class="text-xs text-gray-300 ml-1">(${b.time})</span></td>
+                            <td class="px-6 py-4">
+                                <div class="font-bold">${b.name}</div>
+                                <div class="text-[10px] text-gray-400">${b.tel}</div>
+                            </td>
+                            <td class="px-6 py-4 text-xs font-medium text-gray-500">${barber ? barber.name : 'ใครก็ได้'}</td>
+                            <td class="px-6 py-4 text-right font-bold text-green-600">฿${b.price.toLocaleString()}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+        }
+    </script>
 </body>
-</html> 
+</html>

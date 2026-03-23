@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luxe Salon - Soft Premium Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <style>
+        :root {
+            /* โทนสี Soft Premium: เรียบหรูแต่น่ารัก */
+            --color-primary: #8eb8e5;      /* Soft Elegant Blue */
+            --color-secondary: #f4c2c2;    /* Soft Blush Pink */
+            --color-accent: #f9dc5c;       /* Cute Muted Yellow */
+            --color-bg: #fdfbf7;           /* Warm Creamy White */
+            --color-surface: #ffffff;  
+            --color-text-dark: #3a3532;    /* Deep warm charcoal */
+            --color-text-muted: #9e9792;
+            --color-border: #f0ebe6;
+        }
+        
+        body { 
+            font-family: 'Kanit', sans-serif; 
+            background-color: var(--color-bg); 
+            color: var(--color-text-dark);
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .font-heading { font-family: 'Outfit', 'Kanit', sans-serif; }
+        
+        .fade-in { animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .hidden-view { display: none !important; }
+        
+        /* Premium Soft Inputs */
+        .input-group { position: relative; }
+        .input-group i {
+            position: absolute; left: 1.25rem; top: 50%; transform: translateY(-50%);
+            color: var(--color-text-muted); font-size: 1.25rem; pointer-events: none; z-index: 10;
+        }
+        .modern-input {
+            background-color: #f7f5f0;
+            border: 2px solid transparent;
+            border-radius: 1.25rem;
+            color: var(--color-text-dark);
+            transition: all 0.3s ease;
+            padding-left: 3.25rem !important; 
+            font-weight: 400;
+        }
+        .modern-input:focus {
+            background-color: var(--color-surface);
+            border-color: var(--color-primary);
+            box-shadow: 0 10px 25px -5px rgba(142, 184, 229, 0.2);
+            outline: none;
+        }
+        select option:disabled {
+            color: #d1d5db;
+            background-color: #f9f8f6;
+            font-style: italic;
+        }
+        
+        /* Soft Elevated Cards */
+        .modern-card {
+            background-color: var(--color-surface);
+            border-radius: 1.75rem;
+            box-shadow: 0 15px 40px -10px rgba(58, 53, 50, 0.05);
+            border: 1px solid var(--color-border);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        /* Glassmorphism */
+        .glass-panel {
+            background: rgba(253, 251, 247, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--color-text-dark);
+            color: white;
+            border-radius: 1.25rem;
+            transition: all 0.3s;
+            box-shadow: 0 8px 20px rgba(58, 53, 50, 0.15);
+        }
+        .btn-primary:hover {
+            background-color: #231f1d;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(58, 53, 50, 0.2);
+        }
+
+        /* Admin Menu Tabs */
+        .admin-tab-btn {
+            position: relative; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 1rem 0.5rem; border-radius: 1.25rem;
+            transition: all 0.3s ease; cursor: pointer; border: 1px solid transparent;
+        }
+        .admin-tab-btn i { font-size: 1.5rem; transition: transform 0.3s ease; }
+        .admin-tab-btn.active {
+            background-color: var(--color-primary); color: white;
+            box-shadow: 0 8px 20px -5px rgba(142, 184, 229, 0.5);
+            border-color: rgba(255,255,255,0.2);
+        }
+        .admin-tab-btn.active i { transform: scale(1.1); }
+        .admin-tab-btn:not(.active) { background-color: #f7f5f0; color: var(--color-text-muted); border-color: var(--color-border); }
+        .admin-tab-btn:not(.active):hover { background-color: #f0ebe6; color: var(--color-text-dark); }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #dcd7d3; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--color-primary); }
+
+        /* Flatpickr Customization */
+        .flatpickr-calendar { 
+            box-shadow: none !important; border: 1px solid var(--color-border) !important; 
+            border-radius: 1.5rem !important; padding: 10px !important;
+            background-color: #f7f5f0 !important; width: 100% !important; max-width: 320px; margin: 0 auto;
+        }
+        .flatpickr-day.selected { background: var(--color-primary) !important; border-color: var(--color-primary) !important; }
+        
+        .timeline-grid { background-image: repeating-linear-gradient(to right, transparent, transparent calc(10% - 1px), var(--color-border) 10%); }
+        
+        .lang-toggle { cursor: pointer; user-select: none; transition: color 0.3s; }
+        .lang-active { font-weight: 600; color: var(--color-primary); }
+        .lang-inactive { font-weight: 400; color: var(--color-text-muted); }
+
+        .cancel-edit-btn { display: none; }
+    </style>
+</head>
+<body class="bg-[#fdfbf7]">
+
+    <nav class="glass-panel sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center cursor-pointer gap-3" id="brand-logo">
+                    <div class="w-10 h-10 bg-[#8eb8e5] rounded-2xl flex items-center justify-center text-white shadow-[0_4px_10px_rgba(142,184,229,0.4)]">
+                        <i class="ph ph-scissors text-xl"></i>
+                    </div>
+                    <span class="text-2xl font-heading font-semibold text-[#3a3532] tracking-wide">Luxe<span class="text-[#8eb8e5]">.</span></span>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3 bg-white px-4 py-2 rounded-2xl shadow-sm border border-[#f0ebe6] text-sm" id="lang-switcher">
+                        <span class="lang-toggle lang-active" data-lang="th">TH</span>
+                        <span class="text-gray-300">|</span>
+                        <span class="lang-toggle lang-inactive" data-lang="en">EN</span>
+                    </div>
+
+                    <button id="btn-go-admin" class="text-sm text-[#9e9792] hover:text-[#3a3532] transition duration-300 font-medium px-4 py-2 rounded-2xl tracking-wide hover:bg-white border border-transparent hover:border-[#f0ebe6]">
+                        <i class="ph ph-lock-key mr-1"></i> <span class="lang-th">ผู้จัดการ</span><span class="lang-en hidden">Manager</span>
+                    </button>
+                    <button id="btn-logout" class="hidden text-sm bg-[#f4c2c2]/20 text-[#d95c5c] hover:bg-[#f4c2c2] hover:text-white px-5 py-2 rounded-2xl font-medium transition duration-300">
+                        <span class="lang-th">ออกจากระบบ</span><span class="lang-en hidden">Sign Out</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main id="view-booking" class="flex-grow fade-in flex flex-col">
+        
+        <div class="relative w-full h-[60vh] min-h-[450px] flex items-center justify-center overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img src="https://images.unsplash.com/photo-1527799820374-dcf8d9d4a388?auto=format&fit=crop&w=1920&q=80" alt="Luxury Salon" class="w-full h-full object-cover filter brightness-[0.7]">
+                <div class="absolute inset-0 bg-gradient-to-t from-[#fdfbf7] via-transparent to-transparent"></div>
+            </div>
+
+            <div class="relative z-10 text-center px-4 w-full max-w-4xl -mt-10">
+                <span class="bg-white/90 text-[#8eb8e5] px-4 py-1.5 rounded-full text-xs font-bold tracking-[0.2em] uppercase shadow-md inline-block mb-6 backdrop-blur-sm">Premium Studio</span>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-heading font-semibold text-white mb-6 drop-shadow-md leading-tight">
+                    <span class="lang-th">เปล่งประกาย</span><span class="lang-en hidden">Discover Your</span><br>
+                    <span class="italic font-light text-[#f9dc5c]">
+                        <span class="lang-th">ในเวอร์ชันที่ดีที่สุด</span><span class="lang-en hidden">True Radiance</span>
+                    </span>
+                </h1>
+                <p class="text-white/90 font-light text-base md:text-lg drop-shadow-sm max-w-2xl mx-auto">
+                    <span class="lang-th">ออกแบบทรงผมและดูแลสุขภาพผมของคุณ ด้วยความใส่ใจจากทีมช่างผู้เชี่ยวชาญระดับพรีเมียม</span>
+                    <span class="lang-en hidden">Expert hair styling and care, tailored perfectly to your unique personality by our premium stylists.</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="w-full max-w-5xl mx-auto px-4 -mt-24 relative z-20 pb-20">
+            <div class="modern-card p-8 md:p-12 shadow-[0_20px_50px_rgba(0,0,0,0.15)] bg-white">
+                <form id="bookingForm" class="flex flex-col lg:flex-row gap-12">
+                    
+                    <div class="lg:w-[45%] flex flex-col items-center">
+                        <div class="mb-6 w-full text-center lg:text-left">
+                            <h3 class="text-2xl font-heading font-semibold text-[#3a3532] flex items-center justify-center lg:justify-start gap-3">
+                                <span class="w-10 h-10 rounded-full bg-[#8eb8e5]/20 text-[#8eb8e5] flex items-center justify-center"><i class="ph ph-calendar-heart text-xl"></i></span>
+                                <span class="lang-th">เลือกวันที่รับบริการ</span><span class="lang-en hidden">Select Date</span>
+                            </h3>
+                            <p class="text-[#9e9792] text-sm mt-2 lg:ml-13">
+                                <span class="lang-th">ระบุวันที่คุณสะดวกเข้ารับบริการ</span><span class="lang-en hidden">Choose your preferred date.</span>
+                            </p>
+                        </div>
+                        <div class="bg-[#f7f5f0] p-4 rounded-[2rem] border border-[#f0ebe6] w-full flex justify-center shadow-inner">
+                            <input type="text" id="inline-calendar" class="hidden">
+                        </div>
+                    </div>
+
+                    <div class="lg:w-[55%] flex flex-col justify-between">
+                        <div>
+                            <div class="mb-6 text-center lg:text-left">
+                                <h3 class="text-2xl font-heading font-semibold text-[#3a3532] flex items-center justify-center lg:justify-start gap-3">
+                                    <span class="w-10 h-10 rounded-full bg-[#f9dc5c]/30 text-[#d4b02b] flex items-center justify-center"><i class="ph ph-sparkle text-xl"></i></span>
+                                    <span class="lang-th">รายละเอียดการจอง</span><span class="lang-en hidden">Booking Details</span>
+                                </h3>
+                            </div>
+
+                            <div class="space-y-6">
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-xs font-medium text-[#9e9792] mb-2 ml-2 uppercase tracking-wide">
+                                            <span class="lang-th">ชื่อ - นามสกุล</span><span class="lang-en hidden">Full Name</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <i class="ph ph-user"></i>
+                                            <input type="text" id="cust-name" class="w-full py-3.5 pr-4 modern-input text-sm" required placeholder="เช่น คุณเจนนี่">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-medium text-[#9e9792] mb-2 ml-2 uppercase tracking-wide">
+                                            <span class="lang-th">เบอร์ติดต่อ</span><span class="lang-en hidden">Phone Number</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <i class="ph ph-phone"></i>
+                                            <input type="tel" id="cust-phone" class="w-full py-3.5 pr-4 modern-input text-sm" required placeholder="08x-xxx-xxxx">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-xs font-medium text-[#9e9792] mb-2 ml-2 uppercase tracking-wide">
+                                        <span class="lang-th">บริการที่ต้องการ</span><span class="lang-en hidden">Service</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <i class="ph ph-scissors"></i>
+                                        <select id="cust-service" class="w-full py-3.5 pr-4 modern-input cursor-pointer text-sm appearance-none" required>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-xs font-medium text-[#9e9792] mb-2 ml-2 uppercase tracking-wide">
+                                            <span class="lang-th">ระบุช่าง (ไม่บังคับ)</span><span class="lang-en hidden">Select Stylist (Optional)</span>
+                                        </label>
+                                        <div class="input-group">
+                                            <i class="ph ph-users"></i>
+                                            <select id="cust-staff" class="w-full py-3.5 pr-4 modern-input cursor-pointer text-sm appearance-none">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <div class="hidden"><input type="date" id="cust-date" required></div>
+                                        <div class="flex justify-between items-end mb-2">
+                                            <label class="block text-xs font-medium text-[#9e9792] ml-2 uppercase tracking-wide">
+                                                <span class="lang-th">ช่วงเวลาที่สะดวก</span><span class="lang-en hidden">Time Slot</span>
+                                            </label>
+                                            <span id="time-status-msg" class="text-[10px] text-[#d95c5c] font-medium hidden bg-[#f4c2c2]/20 px-2 py-0.5 rounded-md">
+                                                <i class="ph-fill ph-warning-circle"></i> 
+                                                <span class="lang-th">มีคิวเต็มบางช่วงเวลา</span><span class="lang-en hidden">Some slots full</span>
+                                            </span>
+                                        </div>
+                                        <div class="input-group">
+                                            <i class="ph ph-clock"></i>
+                                            <select id="cust-time" class="w-full py-3.5 pr-4 modern-input cursor-pointer text-sm appearance-none" required>
+                                                <option value="" disabled selected>เลือกช่วงเวลา</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-6 mt-8 border-t border-[#f0ebe6]">
+                            <button type="submit" class="w-full btn-primary text-base tracking-wide py-4 font-medium flex items-center justify-center gap-2">
+                                <i class="ph ph-check-circle text-xl text-[#f4b454]"></i>
+                                <span class="lang-th">ยืนยันการจองคิว</span><span class="lang-en hidden">Confirm Booking</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <footer class="mt-auto bg-white border-t border-[#f0ebe6] pt-12 pb-6">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center md:text-left mb-8 items-start">
+                    
+                    <div class="flex flex-col items-center md:items-start">
+                        <div class="flex items-center gap-2 mb-3">
+                            <div class="w-9 h-9 bg-[#f7f5f0] rounded-xl flex items-center justify-center text-[#8eb8e5]">
+                                <i class="ph ph-scissors text-xl"></i>
+                            </div>
+                            <span class="text-2xl font-heading font-semibold text-[#3a3532] tracking-wide">Luxe<span class="text-[#8eb8e5]">.</span></span>
+                        </div>
+                        <p class="text-[#9e9792] text-sm font-light leading-relaxed max-w-xs">
+                            <span class="lang-th">ซาลอนระดับพรีเมียมที่รังสรรค์ความงามและประสบการณ์การดูแลเส้นผมที่สมบูรณ์แบบสำหรับคุณโดยเฉพาะ</span>
+                            <span class="lang-en hidden">A premium salon dedicated to crafting beauty and providing a flawless hair care experience just for you.</span>
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col items-center md:items-start">
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-[#3a3532] mb-5 relative inline-block">
+                            <span class="lang-th">ข้อมูลติดต่อและที่ตั้ง</span><span class="lang-en hidden">Contact & Location</span>
+                        </h4>
+                        <ul class="space-y-4 text-[#9e9792] text-sm font-light">
+                            <li class="flex items-start justify-center md:justify-start gap-3">
+                                <i class="ph ph-map-pin text-[#8eb8e5] text-lg mt-0.5"></i>
+                                <span class="leading-snug"><span class="lang-th">123 ถ.สุขุมวิท เขตวัฒนา<br>กรุงเทพมหานคร 10110</span><span class="lang-en hidden">123 Sukhumvit Rd, Watthana<br>Bangkok 10110</span></span>
+                            </li>
+                            <li class="flex items-center justify-center md:justify-start gap-3">
+                                <i class="ph ph-phone text-[#8eb8e5] text-lg"></i>
+                                <span>089-123-4567, 02-987-6543</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-col items-center md:items-start">
+                        <h4 class="text-xs font-bold uppercase tracking-widest text-[#3a3532] mb-5 relative inline-block">
+                            <span class="lang-th">เวลาทำการและโซเชียล</span><span class="lang-en hidden">Hours & Socials</span>
+                        </h4>
+                        <ul class="space-y-4 text-[#9e9792] text-sm font-light mb-6">
+                            <li class="flex items-center justify-center md:justify-start gap-3">
+                                <i class="ph ph-clock text-[#8eb8e5] text-lg"></i>
+                                <span><span class="lang-th">เปิดบริการทุกวัน : 10:00 - 20:00 น.</span><span class="lang-en hidden">Open Daily : 10:00 AM - 08:00 PM</span></span>
+                            </li>
+                        </ul>
+                        
+                        <div class="flex gap-3 justify-center md:justify-start">
+                            <a href="#" class="w-10 h-10 rounded-full bg-[#f7f5f0] text-[#9e9792] hover:bg-[#8eb8e5] hover:text-white flex items-center justify-center transition shadow-sm">
+                                <i class="ph ph-facebook-logo text-xl"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-[#f7f5f0] text-[#9e9792] hover:bg-[#f4c2c2] hover:text-white flex items-center justify-center transition shadow-sm">
+                                <i class="ph ph-instagram-logo text-xl"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 rounded-full bg-[#f7f5f0] text-[#00B900] hover:bg-[#00B900] hover:text-white flex items-center justify-center transition shadow-sm">
+                                <i class="ph-fill ph-chat-circle-dots text-xl"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="border-t border-[#f0ebe6] pt-6 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-[#9e9792] font-light">
+                    <p>&copy; 2024 Luxe Salon Studio. All rights reserved.</p>
+                    <div class="flex gap-5">
+                        <a href="#" class="hover:text-[#3a3532] transition">Privacy Policy</a>
+                        <a href="#" class="hover:text-[#3a3532] transition">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <main id="view-login" class="flex-grow fade-in hidden-view flex items-center justify-center p-4 min-h-screen">
+        <div class="modern-card p-10 max-w-sm w-full relative">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-[#f7f5f0] rounded-full flex items-center justify-center mx-auto mb-4 shadow-inner">
+                    <i class="ph ph-lock-key text-4xl text-[#9e9792]"></i>
+                </div>
+                <h2 class="text-2xl font-heading font-semibold text-[#3a3532]"><span class="lang-th">ระบบแอดมิน</span><span class="lang-en hidden">Admin Portal</span></h2>
+                <p class="text-[#9e9792] text-sm mt-1 font-light">Default: admin / 1234</p>
+            </div>
+            <form id="loginForm">
+                <div class="mb-5 input-group">
+                    <i class="ph ph-user"></i>
+                    <input type="text" id="login-username" class="w-full py-3.5 pr-4 modern-input text-sm" placeholder="Username" required>
+                </div>
+                <div class="mb-8 input-group">
+                    <i class="ph ph-lock"></i>
+                    <input type="password" id="login-password" class="w-full py-3.5 pr-4 modern-input text-sm" placeholder="Password" required>
+                </div>
+                <button type="submit" class="w-full btn-primary text-sm tracking-wide py-4 font-medium">
+                    <span class="lang-th">เข้าสู่ระบบ</span><span class="lang-en hidden">Sign In</span>
+                </button>
+            </form>
+            <button id="btn-back-home" class="w-full mt-6 text-sm text-[#9e9792] hover:text-[#3a3532] transition font-medium border-b border-transparent hover:border-[#3a3532] inline-block pb-0.5 w-auto mx-auto block">
+                <span class="lang-th">ยกเลิก</span><span class="lang-en hidden">Cancel</span>
+            </button>
+        </div>
+    </main>
+
+    <main id="view-dashboard" class="hidden-view h-[calc(100vh-5rem)] flex flex-col overflow-hidden max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6">
+        
+        <header class="flex flex-col md:flex-row items-center justify-between bg-white/50 backdrop-blur-sm z-10 gap-4 mb-6">
+            <h2 class="text-2xl font-heading font-semibold text-[#3a3532] flex items-center gap-2">
+                <i class="ph ph-squares-four text-[#8eb8e5]"></i>
+                <span class="lang-th">ระบบจัดการร้าน</span><span class="lang-en hidden">Salon Dashboard</span>
+            </h2>
+            <div class="bg-white px-5 py-2.5 rounded-full shadow-sm border border-[#f0ebe6] text-sm font-bold text-[#8eb8e5]" id="current-date-display"></div>
+        </header>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-4 mb-8 flex-shrink-0">
+            <button class="admin-tab-btn active bg-white" data-target="overview">
+                <i class="ph ph-calendar-check text-[#5cb6d6]"></i>
+                <span class="text-sm font-medium"><span class="lang-th">ตารางคิวงาน</span><span class="lang-en hidden">Schedule</span></span>
+            </button>
+            <button class="admin-tab-btn bg-white" data-target="staff">
+                <i class="ph ph-users text-[#f4c2c2]"></i>
+                <span class="text-sm font-medium"><span class="lang-th">จัดการช่าง</span><span class="lang-en hidden">Staff</span></span>
+            </button>
+            <button class="admin-tab-btn bg-white" data-target="services">
+                <i class="ph ph-list-dashes text-[#f4b454]"></i>
+                <span class="text-sm font-medium"><span class="lang-th">จัดการบริการ</span><span class="lang-en hidden">Services</span></span>
+            </button>
+            <button class="admin-tab-btn bg-white" data-target="revenue">
+                <i class="ph ph-chart-bar text-[#ef8c43]"></i>
+                <span class="text-sm font-medium"><span class="lang-th">สถิติรายได้</span><span class="lang-en hidden">Financials</span></span>
+            </button>
+            <button class="admin-tab-btn bg-white" data-target="settings">
+                <i class="ph ph-gear text-[#9e9792]"></i>
+                <span class="text-sm font-medium"><span class="lang-th">ตั้งค่าระบบ</span><span class="lang-en hidden">Settings</span></span>
+            </button>
+        </div>
+
+        <div class="flex-1 overflow-y-auto hide-scrollbar pb-10">
+            
+            <div id="admin-view-overview" class="admin-view fade-in space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <h2 class="text-xl font-heading font-semibold text-[#3a3532]">
+                        <span class="lang-th">ไทม์ไลน์การจองคิว</span><span class="lang-en hidden">Booking Timeline</span>
+                    </h2>
+                    <div class="input-group">
+                        <i class="ph ph-calendar"></i>
+                        <input type="date" id="admin-date-picker" class="py-2.5 pr-4 modern-input text-sm cursor-pointer shadow-sm bg-white font-medium" style="border-radius: 1rem;">
+                    </div>
+                </div>
+
+                <div class="modern-card p-6 overflow-x-auto">
+                    <div id="timeline-container" class="min-w-[800px] h-40 relative"></div>
+                </div>
+
+                <div class="modern-card overflow-hidden">
+                    <div class="p-6 border-b border-[#f0ebe6] bg-[#fdfbf7]/50">
+                        <h4 class="font-semibold text-[#3a3532] flex items-center gap-2">
+                            <i class="ph ph-list-bullets text-[#8eb8e5] text-xl"></i>
+                            <span class="lang-th">รายละเอียดคิวรายวัน</span><span class="lang-en hidden">Daily Queue Details</span>
+                        </h4>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left whitespace-nowrap">
+                            <thead>
+                                <tr class="text-[#9e9792] text-xs uppercase tracking-widest border-b border-[#f0ebe6] bg-white">
+                                    <th class="py-4 px-6 font-medium">Time (Dur.)</th>
+                                    <th class="py-4 px-6 font-medium">Client</th>
+                                    <th class="py-4 px-6 font-medium">Service</th>
+                                    <th class="py-4 px-6 font-medium">Stylist</th>
+                                    <th class="py-4 px-6 font-medium text-right">Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-queue-list" class="divide-y divide-[#f0ebe6] bg-white"></tbody>
+                        </table>
+                        <div id="admin-no-queue" class="text-center py-16 text-[#9e9792] hidden text-sm bg-white">
+                            <i class="ph ph-coffee text-4xl text-[#dcd7d3] mb-3"></i><br>
+                            <span class="lang-th">ว่างจ้า! ยังไม่มีคิวจองสำหรับวันนี้</span><span class="lang-en hidden">Schedule is clear for this date!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="admin-view-staff" class="admin-view hidden-view fade-in space-y-6">
+                <div class="modern-card p-6 md:p-8 border-t-4 border-t-[#f4c2c2]">
+                    <h3 class="text-xl font-heading font-semibold text-[#3a3532] mb-6 flex items-center justify-between">
+                        <span class="flex items-center gap-2"><i class="ph ph-user-plus text-[#f4c2c2]"></i> <span class="lang-th" id="staff-form-title-th">เพิ่มช่างทำผม</span><span class="lang-en hidden" id="staff-form-title-en">Add New Stylist</span></span>
+                        <button type="button" id="cancel-edit-staff" class="cancel-edit-btn text-xs text-red-400 hover:text-red-600 bg-red-50 px-3 py-1.5 rounded-lg font-medium transition"><span class="lang-th">ยกเลิกการแก้ไข</span><span class="lang-en hidden">Cancel Edit</span></button>
+                    </h3>
+                    <form id="addStaffForm" class="flex flex-col md:flex-row gap-4 items-end">
+                        <div class="flex-grow w-full">
+                            <label class="block text-xs font-medium text-[#9e9792] mb-2 uppercase ml-1">
+                                <span class="lang-th">ชื่อช่าง (TH)</span><span class="lang-en hidden">Stylist Name (TH)</span>
+                            </label>
+                            <div class="input-group">
+                                <i class="ph ph-user"></i>
+                                <input type="text" id="new-staff-name-th" required class="w-full py-3.5 pr-4 modern-input text-sm bg-white shadow-sm" placeholder="ช่าง...">
+                            </div>
+                        </div>
+                        <div class="flex-grow w-full">
+                            <label class="block text-xs font-medium text-[#9e9792] mb-2 uppercase ml-1">
+                                <span class="lang-th">ชื่อช่าง (EN)</span><span class="lang-en hidden">Stylist Name (EN)</span>
+                            </label>
+                            <div class="input-group">
+                                <i class="ph ph-user"></i>
+                                <input type="text" id="new-staff-name-en" required class="w-full py-3.5 pr-4 modern-input text-sm bg-white shadow-sm" placeholder="Stylist...">
+                            </div>
+                        </div>
+                        <button type="submit" id="submit-staff-btn" class="w-full md:w-auto btn-primary py-3.5 px-8 text-sm whitespace-nowrap">
+                            <span class="lang-th">บันทึก</span><span class="lang-en hidden">Save</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-heading font-semibold text-[#3a3532] mb-4">
+                        <span class="lang-th">รายชื่อช่างปัจจุบัน</span><span class="lang-en hidden">Current Stylists</span>
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="staff-list-admin"></div>
+                </div>
+            </div>
+
+            <div id="admin-view-services" class="admin-view hidden-view fade-in space-y-6">
+                <div class="modern-card p-6 md:p-8 border-t-4 border-t-[#f4b454]">
+                    <h3 class="text-xl font-heading font-semibold text-[#3a3532] mb-6 flex items-center justify-between">
+                        <span class="flex items-center gap-2"><i class="ph ph-plus-circle text-[#f4b454]"></i> <span class="lang-th" id="srv-form-title-th">เพิ่มบริการใหม่</span><span class="lang-en hidden" id="srv-form-title-en">Add New Service</span></span>
+                        <button type="button" id="cancel-edit-service" class="cancel-edit-btn text-xs text-red-400 hover:text-red-600 bg-red-50 px-3 py-1.5 rounded-lg font-medium transition"><span class="lang-th">ยกเลิกการแก้ไข</span><span class="lang-en hidden">Cancel Edit</span></button>
+                    </h3>
+                    <form id="addServiceForm" class="flex flex-col md:flex-row gap-4 items-end">
+                        <div class="flex-grow w-full">
+                            <label class="block text-xs font-medium text-[#9e9792] mb-2 uppercase ml-1">
+                                <span class="lang-th">ชื่อบริการ</span><span class="lang-en hidden">Service Name</span>
+                            </label>
+                            <div class="input-group">
+                                <i class="ph ph-tag"></i>
+                                <input type="text" id="new-service-name" required class="w-full py-3.5 pr-4 modern-input text-sm bg-white shadow-sm">
+                            </div>
+                        </div>
+                        <div class="w-full md:w-[150px]">
+                            <label class="block text-xs font-medium text-[#9e9792] mb-2 uppercase ml-1">
+                                <span class="lang-th">เวลา (ชม.)</span><span class="lang-en hidden">Hrs</span>
+                            </label>
+                            <div class="input-group">
+                                <i class="ph ph-hourglass"></i>
+                                <input type="number" id="new-service-duration" required class="w-full py-3.5 pr-2 modern-input text-sm bg-white shadow-sm" min="1" max="10" placeholder="1">
+                            </div>
+                        </div>
+                        <div class="w-full md:w-[200px]">
+                            <label class="block text-xs font-medium text-[#9e9792] mb-2 uppercase ml-1">
+                                <span class="lang-th">ราคา (บาท)</span><span class="lang-en hidden">Price (THB)</span>
+                            </label>
+                            <div class="input-group">
+                                <i class="ph ph-currency-thb"></i>
+                                <input type="number" id="new-service-price" required class="w-full py-3.5 pr-4 modern-input text-sm bg-white shadow-sm">
+                            </div>
+                        </div>
+                        <button type="submit" id="submit-service-btn" class="w-full md:w-auto btn-primary py-3.5 px-8 text-sm whitespace-nowrap">
+                            <span class="lang-th">บันทึก</span><span class="lang-en hidden">Save</span>
+                        </button>
+                    </form>
+                </div>
+
+                <div>
+                    <h3 class="text-xl font-heading font-semibold text-[#3a3532] mb-4">
+                        <span class="lang-th">เมนูบริการปัจจุบัน</span><span class="lang-en hidden">Current Service Menu</span>
+                    </h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="services-list-admin"></div>
+                </div>
+            </div>
+
+            <div id="admin-view-revenue" class="admin-view hidden-view fade-in space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <div class="lg:col-span-2 modern-card p-6 md:p-8">
+                        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
+                            <h3 class="text-xl font-heading font-semibold text-[#3a3532] flex items-center gap-2">
+                                <i class="ph ph-chart-bar text-[#f9dc5c] text-2xl"></i>
+                                <span class="lang-th">สถิติรายได้</span><span class="lang-en hidden">Revenue Stats</span>
+                            </h3>
+                            <select id="revenue-month-filter" class="px-5 py-2.5 modern-input bg-[#f7f5f0] text-sm font-medium cursor-pointer w-full sm:w-auto border-none">
+                                <option value="all">ดูภาพรวมทั้งหมด (6 เดือน)</option>
+                                <option value="มกราคม">มกราคม (Jan)</option>
+                                <option value="กุมภาพันธ์">กุมภาพันธ์ (Feb)</option>
+                                <option value="มีนาคม">มีนาคม (Mar)</option>
+                                <option value="เมษายน">เมษายน (Apr)</option>
+                            </select>
+                        </div>
+                        <div class="relative h-[300px] w-full"><canvas id="revenueChart"></canvas></div>
+                    </div>
+
+                    <div class="flex flex-col gap-6">
+                        <div class="modern-card p-8 bg-[#8eb8e5] border-none text-white text-center shadow-[0_10px_30px_rgba(92,182,214,0.3)] flex-grow flex flex-col justify-center relative overflow-hidden">
+                            <div class="absolute -top-4 -right-4 w-24 h-24 bg-white opacity-10 rounded-full blur-xl"></div>
+                            <h4 class="text-white/90 text-xs font-bold uppercase tracking-widest mb-2" id="revenue-summary-title">Total 6 Months</h4>
+                            <p class="text-5xl font-heading font-semibold text-white mb-1 drop-shadow-sm" id="revenue-summary-amount">450k</p>
+                            <p class="text-white/80 text-sm">THB</p>
+                        </div>
+
+                        <div class="modern-card p-6 border-t-4 border-t-[#ef8c43]">
+                            <h4 class="font-medium text-[#3a3532] mb-4 text-sm"><span class="lang-th">เพิ่ม/แก้ไขยอดรายได้</span><span class="lang-en hidden">Update Revenue Data</span></h4>
+                            <form id="addRevenueForm" class="space-y-4">
+                                <div class="input-group">
+                                    <i class="ph ph-calendar"></i>
+                                    <select id="rev-month-input" class="w-full py-2.5 pr-4 modern-input text-sm appearance-none bg-white shadow-sm">
+                                        <option value="มกราคม">มกราคม</option>
+                                        <option value="กุมภาพันธ์">กุมภาพันธ์</option>
+                                        <option value="มีนาคม">มีนาคม</option>
+                                        <option value="เมษายน">เมษายน</option>
+                                        <option value="พฤษภาคม">พฤษภาคม</option>
+                                        <option value="มิถุนายน">มิถุนายน</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <i class="ph ph-currency-thb"></i>
+                                    <input type="number" id="rev-amount-input" class="w-full py-2.5 pr-4 modern-input text-sm bg-white shadow-sm" placeholder="New Amount" required>
+                                </div>
+                                <button type="submit" class="w-full bg-[#f4c2c2] hover:bg-[#eaa9a9] text-[#3a3532] font-medium py-2.5 rounded-xl transition text-sm shadow-sm">
+                                    <span class="lang-th">อัปเดตข้อมูล</span><span class="lang-en hidden">Update Data</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="admin-view-settings" class="admin-view hidden-view fade-in flex items-center justify-center min-h-[50vh]">
+                <div class="modern-card p-8 max-w-lg w-full border-t-4 border-t-[#9e9792]">
+                    <h3 class="text-xl font-heading font-semibold text-[#3a3532] mb-6 flex items-center gap-2">
+                        <i class="ph ph-gear text-[#9e9792]"></i>
+                        <span class="lang-th">ตั้งค่าบัญชีผู้จัดการ</span><span class="lang-en hidden">Admin Account Settings</span>
+                    </h3>
+                    <form id="settingsForm" class="space-y-5">
+                        <div>
+                            <label class="block text-xs font-medium text-[#9e9792] mb-2 uppercase ml-1">New Username</label>
+                            <div class="input-group">
+                                <i class="ph ph-user"></i>
+                                <input type="text" id="setting-user" class="w-full py-3.5 pr-4 modern-input text-sm bg-white" required>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-[#9e9792] mb-2 uppercase ml-1">New Password</label>
+                            <div class="input-group">
+                                <i class="ph ph-lock"></i>
+                                <input type="password" id="setting-pass" class="w-full py-3.5 pr-4 modern-input text-sm bg-white" required>
+                            </div>
+                        </div>
+                        <div class="pt-4 border-t border-[#f0ebe6]">
+                            <button type="submit" class="w-full btn-primary py-3.5 text-sm">
+                                <span class="lang-th">บันทึกการเปลี่ยนแปลง</span><span class="lang-en hidden">Save Changes</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        $(document).ready(function() {
+            // --- Global State ---
+            let currentLang = 'th';
+            let adminUser = 'admin';
+            let adminPass = '1234';
+            
+            let editingServiceId = null;
+            let editingStaffId = null;
+
+            // --- Mock Data ---
+            const todayStr = new Date().toISOString().split('T')[0];
+            const todayDisplay = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'short', day: 'numeric' });
+            $('#current-date-display, #admin-date-display').text(todayDisplay);
+            $('#admin-date-picker').val(todayStr);
+
+            let servicesData = [
+                { id: 1, name_th: 'ตัดผมออกแบบทรง (Haircut)', name_en: 'Signature Haircut', price: 600, duration: 1 },
+                { id: 2, name_th: 'ทรีทเม้นท์เคราติน (Keratin)', name_en: 'Deep Keratin Treatment', price: 2500, duration: 2 },
+                { id: 3, name_th: 'ทำสีผมแฟชั่น (Coloring)', name_en: 'Fashion Hair Color', price: 3500, duration: 3 }
+            ];
+
+            let staffData = [
+                { id: 1, name_th: 'ช่างนัท', name_en: 'Stylist Nut' },
+                { id: 2, name_th: 'ช่างบอย', name_en: 'Stylist Boy' },
+                { id: 3, name_th: 'ช่างเจน', name_en: 'Stylist Jane' }
+            ];
+
+            let bookingsData = [
+                { date: todayStr, time: '11:00', duration: 2, name: 'คุณนัท', phone: '081-234-5678', serviceId: 2, staffId: 1 },
+                { date: todayStr, time: '14:00', duration: 1, name: 'คุณเจน', phone: '089-876-5432', serviceId: 1, staffId: 3 },
+                { date: todayStr, time: '16:00', duration: 3, name: 'คุณบอย', phone: '080-111-2222', serviceId: 3, staffId: 2 }
+            ];
+
+            let monthlyRevenue = {
+                'มกราคม': 75000, 'กุมภาพันธ์': 82000, 'มีนาคม': 68000, 'เมษายน': 95000, 'พฤษภาคม': 85000, 'มิถุนายน': 54000
+            };
+
+            let myChart = null;
+
+            // --- 0. Language Management (TH/EN) ---
+            $('.lang-toggle').click(function() {
+                const selectedLang = $(this).data('lang');
+                if(currentLang === selectedLang) return;
+                currentLang = selectedLang;
+                
+                $('.lang-toggle').removeClass('lang-active').addClass('lang-inactive');
+                $(this).removeClass('lang-inactive').addClass('lang-active');
+                
+                if (currentLang === 'en') {
+                    $('.lang-th').addClass('hidden');
+                    $('.lang-en').removeClass('hidden');
+                    $('#cust-name').attr('placeholder', 'John Doe');
+                    $('#cust-phone').attr('placeholder', 'Phone Number');
+                } else {
+                    $('.lang-en').addClass('hidden');
+                    $('.lang-th').removeClass('hidden');
+                    $('#cust-name').attr('placeholder', 'เช่น คุณเจนนี่');
+                    $('#cust-phone').attr('placeholder', '08x-xxx-xxxx');
+                }
+                
+                const displayDate = new Date().toLocaleDateString(currentLang === 'en' ? 'en-US' : 'th-TH', { year: 'numeric', month: 'short', day: 'numeric' });
+                $('#current-date-display, #admin-date-display').text(displayDate);
+                
+                renderCustomerDropdowns();
+                updateAvailableTimes(); 
+                renderAdminData($('#admin-date-picker').val());
+                renderAdminServices();
+                renderAdminStaff();
+                if(myChart) initChart(); 
+            });
+
+            // --- 1. Smart Slot Blocking & Time Selection ---
+            function getServiceDuration(id) {
+                const service = servicesData.find(s => s.id === id);
+                return service ? service.duration : 1;
+            }
+
+            function updateAvailableTimes() {
+                const selectedDate = $('#cust-date').val();
+                const selectedStaffId = $('#cust-staff').val();
+                if(!selectedDate) return;
+
+                let relevantBookings = bookingsData.filter(b => b.date === selectedDate);
+                if (selectedStaffId !== 'any') {
+                    relevantBookings = relevantBookings.filter(b => b.staffId === parseInt(selectedStaffId));
+                }
+
+                const serviceId = parseInt($('#cust-service').val());
+                const neededDuration = isNaN(serviceId) ? 1 : getServiceDuration(serviceId);
+
+                const startHour = 10;
+                const endHour = 19;
+                let optionsHtml = `<option value="" disabled selected>${currentLang === 'en' ? 'Select Time Slot' : 'เลือกช่วงเวลา'}</option>`;
+                let hasConflict = false;
+
+                for(let h = startHour; h <= endHour; h++) {
+                    const optionHour = h;
+                    const expectedEndHour = optionHour + neededDuration;
+                    
+                    const timeStr = `${h.toString().padStart(2, '0')}:00`;
+                    const endTimeStr = `${expectedEndHour.toString().padStart(2, '0')}:00`;
+                    const timeRangeStr = `${timeStr} - ${endTimeStr}`;
+                    
+                    let isConflict = false;
+                    
+                    if (expectedEndHour > 20) {
+                        isConflict = true; 
+                    } else {
+                        let overlappingCount = 0;
+                        for(let b of relevantBookings) {
+                            const bStartHour = parseInt(b.time.split(':')[0]);
+                            const bEndHour = bStartHour + b.duration;
+                            
+                            if(optionHour < bEndHour && expectedEndHour > bStartHour) {
+                                overlappingCount++;
+                            }
+                        }
+
+                        if (selectedStaffId === 'any') {
+                            if (overlappingCount >= staffData.length) isConflict = true;
+                        } else {
+                            if (overlappingCount > 0) isConflict = true;
+                        }
+                    }
+                    
+                    if(isConflict) {
+                        hasConflict = true;
+                        const bookedText = currentLang === 'en' ? '(Full)' : '(คิวเต็ม)';
+                        optionsHtml += `<option value="${timeStr}" disabled>${timeRangeStr} ${bookedText}</option>`;
+                    } else {
+                        optionsHtml += `<option value="${timeStr}">${timeRangeStr}</option>`;
+                    }
+                }
+
+                $('#cust-time').html(optionsHtml);
+                
+                if(hasConflict) {
+                    $('#time-status-msg').removeClass('hidden');
+                } else {
+                    $('#time-status-msg').addClass('hidden');
+                }
+            }
+
+            flatpickr("#inline-calendar", {
+                inline: true,
+                defaultDate: "today",
+                minDate: "today",
+                onChange: function(selectedDates, dateStr) {
+                    $('#cust-date').val(dateStr);
+                    updateAvailableTimes();
+                }
+            });
+            $('#cust-date').val(todayStr);
+
+            $('#cust-service, #cust-staff').change(function() { updateAvailableTimes(); });
+
+            // --- 3. Navigation ---
+            function switchMainView(viewName) {
+                $('#view-booking, #view-login, #view-dashboard').addClass('hidden-view');
+                if (viewName === 'booking') {
+                    $('#view-booking').removeClass('hidden-view');
+                    $('#btn-go-admin').show();
+                    $('#btn-logout').hide(); 
+                    renderCustomerDropdowns();
+                    updateAvailableTimes();
+                } else if (viewName === 'login') {
+                    $('#view-login').removeClass('hidden-view');
+                    $('#btn-go-admin, #btn-logout').hide();
+                } else if (viewName === 'dashboard') {
+                    $('#view-dashboard').removeClass('hidden-view');
+                    $('#btn-go-admin').hide();
+                    $('#btn-logout').show();
+                    renderAdminData($('#admin-date-picker').val());
+                    renderAdminServices();
+                    renderAdminStaff();
+                    if(!myChart) initChart();
+                }
+            }
+
+            $('#brand-logo, #btn-back-home').click(() => switchMainView('booking'));
+            $('#btn-go-admin').click(() => switchMainView('login'));
+            $('#btn-logout').click(() => {
+                const msg = currentLang === 'en' ? 'Sign out?' : 'ต้องการออกจากระบบหรือไม่?';
+                if(confirm(msg)) switchMainView('booking');
+            });
+
+            $('.admin-tab-btn').click(function() {
+                $('.admin-tab-btn').removeClass('active');
+                $(this).addClass('active');
+                const target = $(this).data('target');
+                $('.admin-view').addClass('hidden-view');
+                $(`#admin-view-${target}`).removeClass('hidden-view');
+            });
+
+            // --- 4. Customer UI ---
+            function renderCustomerDropdowns() {
+                let defaultSrv = currentLang === 'en' ? 'Select a Service' : 'เลือกบริการ';
+                let srvOptions = `<option value="" disabled selected>${defaultSrv}</option>`;
+                $.each(servicesData, function(i, s) {
+                    const name = currentLang === 'en' ? (s.name_en || s.name_th) : s.name_th;
+                    srvOptions += `<option value="${s.id}">${name} - ฿${s.price.toLocaleString()}</option>`;
+                });
+                $('#cust-service').html(srvOptions);
+
+                let defaultStf = currentLang === 'en' ? 'Any Stylist (Auto)' : 'ไม่ระบุช่าง (จัดคิวอัตโนมัติ)';
+                let stfOptions = `<option value="any">${defaultStf}</option>`;
+                $.each(staffData, function(i, s) {
+                    const name = currentLang === 'en' ? (s.name_en || s.name_th) : s.name_th;
+                    stfOptions += `<option value="${s.id}">${name}</option>`;
+                });
+                $('#cust-staff').html(stfOptions);
+            }
+
+            function processBooking() {
+                const bookingDate = $('#cust-date').val() || todayStr;
+                const serviceId = parseInt($('#cust-service').val());
+                let staffId = $('#cust-staff').val();
+                
+                if(staffId === 'any') {
+                    staffId = staffData.length > 0 ? staffData[Math.floor(Math.random() * staffData.length)].id : null;
+                } else {
+                    staffId = parseInt(staffId);
+                }
+                
+                const newBooking = {
+                    date: bookingDate,
+                    time: $('#cust-time').val(),
+                    duration: getServiceDuration(serviceId),
+                    name: $('#cust-name').val(),
+                    phone: $('#cust-phone').val(),
+                    serviceId: serviceId,
+                    staffId: staffId
+                };
+                bookingsData.push(newBooking);
+                bookingsData.sort((a, b) => a.time.localeCompare(b.time));
+            }
+
+            function getServiceName(id) {
+                const item = servicesData.find(s => s.id === id);
+                if(!item) return 'General';
+                return currentLang === 'en' ? (item.name_en || item.name_th) : item.name_th;
+            }
+            
+            function getStaffName(id) {
+                const item = staffData.find(s => s.id === id);
+                if(!item) return '-';
+                return currentLang === 'en' ? (item.name_en || item.name_th) : item.name_th;
+            }
+
+            $('#bookingForm').submit(function(e) {
+                e.preventDefault();
+                processBooking();
+                alert(currentLang === 'en' ? 'Booking Confirmed! Thank you.' : 'ยืนยันการจองคิวเรียบร้อยค่ะ ขอบคุณค่ะ');
+                this.reset();
+                updateAvailableTimes(); 
+            });
+
+            // --- 5. Admin Auth & Settings ---
+            $('#loginForm').submit(function(e) {
+                e.preventDefault();
+                if ($('#login-username').val() === adminUser && $('#login-password').val() === adminPass) {
+                    switchMainView('dashboard');
+                    this.reset();
+                } else {
+                    alert(currentLang === 'en' ? 'Invalid credentials' : 'รหัสผ่านไม่ถูกต้อง');
+                }
+            });
+
+            $('#settingsForm').submit(function(e) {
+                e.preventDefault();
+                adminUser = $('#setting-user').val();
+                adminPass = $('#setting-pass').val();
+                alert(currentLang === 'en' ? 'Credentials updated successfully!' : 'บันทึกข้อมูลการเข้าสู่ระบบใหม่เรียบร้อยแล้ว');
+                this.reset();
+            });
+
+            // --- 6. Admin Data Render ---
+            function calculateEndTime(time, duration) {
+                let [hours, mins] = time.split(':').map(Number);
+                hours += duration;
+                return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
+            }
+
+            function renderAdminData(dateStr) {
+                const selectedBookings = bookingsData.filter(b => b.date === dateStr);
+                
+                // Table
+                let tbody = '';
+                if(selectedBookings.length === 0) {
+                    $('#admin-no-queue').removeClass('hidden');
+                } else {
+                    $('#admin-no-queue').addClass('hidden');
+                    $.each(selectedBookings, function(i, b) {
+                        const endTime = calculateEndTime(b.time, b.duration);
+                        const durText = currentLang === 'en' ? 'hrs' : 'ชม.';
+                        tbody += `
+                            <tr class="hover:bg-gray-50 transition border-b border-[#f0ebe6] last:border-0">
+                                <td class="py-4 px-6">
+                                    <div class="font-bold text-[#3a3532] bg-[#f7f5f0] inline-block px-2 py-1 rounded-md">${b.time} - ${endTime}</div>
+                                    <div class="text-[10px] text-[#9e9792] mt-1 ml-1">${b.duration} ${durText}</div>
+                                </td>
+                                <td class="py-4 px-6 font-semibold text-[#3a3532]">${b.name}</td>
+                                <td class="py-4 px-6 text-sm text-[#9e9792]">${getServiceName(b.serviceId)}</td>
+                                <td class="py-4 px-6 text-sm text-[#8eb8e5] font-medium">${getStaffName(b.staffId)}</td>
+                                <td class="py-4 px-6 text-right text-sm text-[#9e9792] font-mono">${b.phone}</td>
+                            </tr>
+                        `;
+                    });
+                }
+                $('#admin-queue-list').html(tbody);
+
+                // Timeline
+                const startHour = 10; const endHour = 20; const totalHours = endHour - startHour;
+                
+                let timelineHtml = `
+                    <div class="relative w-full h-32 timeline-grid rounded-xl border border-[#f0ebe6] bg-white">
+                        <div class="absolute top-0 left-0 w-full h-8 border-b border-[#f0ebe6] bg-[#fdfbf7] flex">
+                `;
+                for(let i=0; i<totalHours; i++) {
+                    timelineHtml += `<div class="flex-1 border-r border-[#f0ebe6] h-full relative">
+                        <span class="absolute top-1.5 left-1.5 text-[10px] text-[#9e9792] font-medium">${startHour + i}:00</span>
+                    </div>`;
+                }
+                timelineHtml += `</div><div class="absolute top-8 left-0 w-full bottom-0 relative mt-10 h-24">`;
+
+                selectedBookings.forEach((b, index) => {
+                    const bStartHour = parseInt(b.time.split(':')[0]);
+                    const bStartMin = parseInt(b.time.split(':')[1]);
+                    const startDecimal = bStartHour + (bStartMin / 60);
+                    
+                    if (startDecimal >= startHour && startDecimal < endHour) {
+                        const leftPct = ((startDecimal - startHour) / totalHours) * 100;
+                        const widthPct = (b.duration / totalHours) * 100;
+                        const colors = ['bg-[#8eb8e5]', 'bg-[#f4c2c2]', 'bg-[#f9dc5c]'];
+                        const colorClass = colors[index % colors.length];
+
+                        timelineHtml += `
+                            <div class="absolute flex flex-col group" style="left: ${leftPct}%; width: ${widthPct}%; top: ${index % 2 === 0 ? '10px' : '45px'};">
+                                <div class="mb-1 px-1 whitespace-nowrap z-10 transition-transform group-hover:-translate-y-1">
+                                    <span class="text-xs font-bold text-[#3a3532] block truncate drop-shadow-sm">${b.name} (${getStaffName(b.staffId)})</span>
+                                    <span class="text-[10px] text-[#9e9792] block truncate">${b.time} - ${calculateEndTime(b.time, b.duration)}</span>
+                                </div>
+                                <div class="h-3 w-full ${colorClass} rounded-full shadow-sm border border-black/5 opacity-90 group-hover:opacity-100 transition"></div>
+                            </div>
+                        `;
+                    }
+                });
+
+                timelineHtml += `</div></div>`;
+                $('#timeline-container').html(timelineHtml);
+            }
+
+            $('#admin-date-picker').change(function() { renderAdminData($(this).val()); });
+
+            // --- 7. Admin Services & Staff (With Edit) ---
+            function renderAdminServices() {
+                let listHtml = '';
+                $.each(servicesData, function(i, s) {
+                    const name = currentLang === 'en' ? (s.name_en || s.name_th) : s.name_th;
+                    const durText = currentLang === 'en' ? 'hrs' : 'ชม.';
+                    listHtml += `
+                        <div class="modern-card p-5 bg-white border border-[#f0ebe6] flex justify-between items-center group shadow-sm">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-[#fdfbf7] text-[#f4b454] flex items-center justify-center border border-[#f0ebe6]">
+                                    <i class="ph-fill ph-star"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-[#3a3532] text-sm mb-0.5">${name} <span class="text-[#9e9792] font-normal text-xs">(${s.duration} ${durText})</span></p>
+                                    <p class="text-[#8eb8e5] font-semibold text-sm">฿${s.price.toLocaleString()}</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="edit-service-btn w-8 h-8 rounded-full bg-white text-[#9e9792] flex items-center justify-center hover:bg-[#8eb8e5] hover:text-white transition border border-[#f0ebe6]" data-id="${s.id}">
+                                    <i class="ph ph-pencil-simple text-sm"></i>
+                                </button>
+                                <button class="delete-service-btn w-8 h-8 rounded-full bg-white text-[#9e9792] flex items-center justify-center hover:bg-[#f4c2c2] hover:text-white transition border border-[#f0ebe6]" data-id="${s.id}">
+                                    <i class="ph ph-trash text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                $('#services-list-admin').html(listHtml);
+            }
+
+            $('#services-list-admin').on('click', '.delete-service-btn', function() {
+                if(confirm(currentLang === 'en' ? 'Delete this service?' : 'ลบบริการนี้หรือไม่?')) {
+                    servicesData = servicesData.filter(s => s.id !== $(this).data('id'));
+                    renderAdminServices();
+                    renderCustomerDropdowns();
+                    updateAvailableTimes(); 
+                }
+            });
+
+            $('#services-list-admin').on('click', '.edit-service-btn', function() {
+                const id = $(this).data('id');
+                const service = servicesData.find(s => s.id === id);
+                if(service) {
+                    editingServiceId = id;
+                    $('#new-service-name').val(service.name_th); // Simplified for demo
+                    $('#new-service-duration').val(service.duration);
+                    $('#new-service-price').val(service.price);
+                    
+                    $('#submit-service-btn span.lang-th').text('อัปเดต');
+                    $('#submit-service-btn span.lang-en').text('Update');
+                    $('#cancel-edit-service').show();
+                    $('#new-service-name').focus();
+                }
+            });
+
+            $('#cancel-edit-service').click(function() {
+                editingServiceId = null;
+                $('#addServiceForm')[0].reset();
+                $('#submit-service-btn span.lang-th').text('บันทึก');
+                $('#submit-service-btn span.lang-en').text('Save');
+                $(this).hide();
+            });
+
+            $('#addServiceForm').submit(function(e) {
+                e.preventDefault();
+                const name = $('#new-service-name').val();
+                const price = parseInt($('#new-service-price').val());
+                const duration = parseInt($('#new-service-duration').val()) || 1;
+                
+                if (editingServiceId) {
+                    const idx = servicesData.findIndex(s => s.id === editingServiceId);
+                    if(idx !== -1) {
+                        servicesData[idx].name_th = name;
+                        servicesData[idx].name_en = name;
+                        servicesData[idx].price = price;
+                        servicesData[idx].duration = duration;
+                    }
+                    editingServiceId = null;
+                    $('#cancel-edit-service').hide();
+                    $('#submit-service-btn span.lang-th').text('บันทึก');
+                    $('#submit-service-btn span.lang-en').text('Save');
+                } else {
+                    const newId = servicesData.length > 0 ? Math.max(...servicesData.map(s => s.id)) + 1 : 1;
+                    servicesData.push({ id: newId, name_th: name, name_en: name, price: price, duration: duration });
+                }
+                
+                renderAdminServices();
+                renderCustomerDropdowns();
+                this.reset();
+                updateAvailableTimes(); 
+            });
+
+            // Staff Edit/Delete
+            function renderAdminStaff() {
+                let listHtml = '';
+                $.each(staffData, function(i, s) {
+                    const name = currentLang === 'en' ? (s.name_en || s.name_th) : s.name_th;
+                    listHtml += `
+                        <div class="modern-card p-5 bg-white border border-[#f0ebe6] flex justify-between items-center group shadow-sm">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-[#fdfbf7] text-[#f4c2c2] flex items-center justify-center border border-[#f0ebe6]">
+                                    <i class="ph-fill ph-user"></i>
+                                </div>
+                                <div>
+                                    <p class="font-medium text-[#3a3532] text-sm mb-0.5">${name}</p>
+                                    <p class="text-[#9e9792] font-light text-xs">ID: STF-${s.id.toString().padStart(3, '0')}</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2">
+                                <button class="edit-staff-btn w-8 h-8 rounded-full bg-white text-[#9e9792] flex items-center justify-center hover:bg-[#8eb8e5] hover:text-white transition border border-[#f0ebe6]" data-id="${s.id}">
+                                    <i class="ph ph-pencil-simple text-sm"></i>
+                                </button>
+                                <button class="delete-staff-btn w-8 h-8 rounded-full bg-white text-[#9e9792] flex items-center justify-center hover:bg-[#f4c2c2] hover:text-white transition border border-[#f0ebe6]" data-id="${s.id}">
+                                    <i class="ph ph-trash text-sm"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                $('#staff-list-admin').html(listHtml);
+            }
+
+            $('#staff-list-admin').on('click', '.delete-staff-btn', function() {
+                if(confirm(currentLang === 'en' ? 'Delete this stylist?' : 'ลบช่างคนนี้หรือไม่?')) {
+                    staffData = staffData.filter(s => s.id !== $(this).data('id'));
+                    renderAdminStaff();
+                    renderCustomerDropdowns();
+                }
+            });
+
+            $('#staff-list-admin').on('click', '.edit-staff-btn', function() {
+                const id = $(this).data('id');
+                const staff = staffData.find(s => s.id === id);
+                if(staff) {
+                    editingStaffId = id;
+                    $('#new-staff-name-th').val(staff.name_th);
+                    $('#new-staff-name-en').val(staff.name_en);
+                    
+                    $('#submit-staff-btn span.lang-th').text('อัปเดต');
+                    $('#submit-staff-btn span.lang-en').text('Update');
+                    $('#cancel-edit-staff').show();
+                    $('#new-staff-name-th').focus();
+                }
+            });
+
+            $('#cancel-edit-staff').click(function() {
+                editingStaffId = null;
+                $('#addStaffForm')[0].reset();
+                $('#submit-staff-btn span.lang-th').text('บันทึก');
+                $('#submit-staff-btn span.lang-en').text('Save');
+                $(this).hide();
+            });
+
+            $('#addStaffForm').submit(function(e) {
+                e.preventDefault();
+                const nameTh = $('#new-staff-name-th').val();
+                const nameEn = $('#new-staff-name-en').val() || nameTh;
+                
+                if(editingStaffId) {
+                    const idx = staffData.findIndex(s => s.id === editingStaffId);
+                    if(idx !== -1) {
+                        staffData[idx].name_th = nameTh;
+                        staffData[idx].name_en = nameEn;
+                    }
+                    editingStaffId = null;
+                    $('#cancel-edit-staff').hide();
+                    $('#submit-staff-btn span.lang-th').text('บันทึก');
+                    $('#submit-staff-btn span.lang-en').text('Save');
+                } else {
+                    const newId = staffData.length > 0 ? Math.max(...staffData.map(s => s.id)) + 1 : 1;
+                    staffData.push({ id: newId, name_th: nameTh, name_en: nameEn });
+                }
+                
+                renderAdminStaff();
+                renderCustomerDropdowns();
+                this.reset();
+            });
+
+            // --- 8. Chart.js & Manual Revenue ---
+            function initChart() {
+                if(myChart) myChart.destroy();
+                const ctx = $('#revenueChart')[0].getContext('2d');
+                
+                const labels = currentLang === 'en' 
+                    ? ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun']
+                    : Object.keys(monthlyRevenue);
+
+                myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: currentLang === 'en' ? 'Revenue' : 'รายได้',
+                            data: Object.values(monthlyRevenue),
+                            backgroundColor: '#8eb8e5',
+                            hoverBackgroundColor: '#f9dc5c',
+                            borderRadius: 8,
+                            barPercentage: 0.5
+                        }]
+                    },
+                    options: { 
+                        responsive: true, maintainAspectRatio: false,
+                        plugins: { 
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#3a3532', titleFont: { family: 'Kanit' }, bodyFont: { family: 'Kanit', size: 14 },
+                                callbacks: { label: function(context) { return '฿ ' + context.parsed.y.toLocaleString(); } }
+                            }
+                        },
+                        scales: { 
+                            y: { beginAtZero: true, border: {display: false}, grid: {color: '#f0ebe6', borderDash: [4,4]}, ticks: { color: '#9e9792', font: {family: 'Outfit'} } }, 
+                            x: { border: {display: false}, grid: {display: false}, ticks: { color: '#9e9792', font: {family: 'Outfit'} } } 
+                        }
+                    }
+                });
+                updateRevenueTotal();
+            }
+
+            function updateRevenueTotal() {
+                const total = Object.values(monthlyRevenue).reduce((a, b) => a + b, 0);
+                $('#revenue-summary-amount').text((total/1000).toFixed(0) + 'k');
+            }
+
+            $('#addRevenueForm').submit(function(e) {
+                e.preventDefault();
+                const month = $('#rev-month-input').val();
+                const amount = parseInt($('#rev-amount-input').val());
+                if(!isNaN(amount)) {
+                    monthlyRevenue[month] = amount;
+                    initChart(); // redraw
+                    this.reset();
+                    alert(currentLang === 'en' ? 'Revenue data updated!' : 'อัปเดตข้อมูลรายได้สำเร็จ!');
+                }
+            });
+
+            // Start
+            switchMainView('booking');
+            renderAdminServices(); // init edit forms state
+            renderAdminStaff();
+        });
+    </script>
+</body>
+</html>
